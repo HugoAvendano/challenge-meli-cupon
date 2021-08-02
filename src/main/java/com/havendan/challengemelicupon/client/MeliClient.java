@@ -21,7 +21,12 @@ public class MeliClient extends AbstractClient {
 	public MeliClient(String url) {
         super(url);
     }
- 
+	
+	/**
+	 * Metodo para obtener la informacion de un producto atraves de una api rest 
+	 * @param id
+	 * @return informacion de un item
+	 **/
     public Item getInfoItem(String id) throws ServiceException {
         log.info("Getting item information");
         WebTarget client = createClient(ApplicationEndPoint.getPathItem(id));

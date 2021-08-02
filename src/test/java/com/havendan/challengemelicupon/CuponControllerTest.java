@@ -45,10 +45,12 @@ public class CuponControllerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		this.stringResponseTest1 ="{\r\n" + 
-				"    \"item_ids\": [\"MLA811600001\"],\r\n" + 
-				"    \"amount\" : 5000.00\r\n" + 
-				"}";
+//		this.stringResponseTest1 ="{\r\n" + 
+//				"    \"item_ids\": [\"MLA811600001\"],\r\n" + 
+//				"    \"amount\" : 780.0\r\n" + 
+//				"}";
+		
+		this.stringResponseTest1 ="{\"item_ids\": [\"MLA811600001\"],\"amount\" : 780.0}";
 	}
 	
 	/**
@@ -65,18 +67,28 @@ public class CuponControllerTest {
 		cuponRequest.setItem_ids(item_ids);
 		cuponRequest.setAmount(5000.00f);
 		
-		Cupon cuponResponseExpected = objectmapper.readValue(this.stringResponseTest1, Cupon.class);
+		
 		
 		
         
-        String Cuponresponse = mockMvc.perform(post("http://localhost:8080/coupon/")
+        String CuponResponseString = mockMvc.perform(post("http://localhost:8080/coupon/")
                 .content(objectmapper.writeValueAsString(cuponRequest))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(HttpStatus.OK.value()))
                 .andReturn().getResponse().getContentAsString();
-        assertEquals(cuponResponseExpected, objectmapper.readValue(Cuponresponse, Cupon.class));
         
-        logger.info(Cuponresponse);
+        Cupon cuponResponse =  objectmapper.readValue(CuponResponseString.toString(), Cupon.class);
+        Cupon cuponResponseExpected = objectmapper.readValue(this.stringResponseTest1, Cupon.class);
+        
+        if (cuponResponseExpected.equals(cuponResponse)) {
+        	logger.info("Son iguales");
+        }else {
+        	logger.info("Son distintos");
+        }
+        
+        assertEquals("No coinciden la respuesta con los esperado",cuponResponseExpected,cuponResponse);
+        
+        //logger.info(CuponResponseString);
 	}
 
 }

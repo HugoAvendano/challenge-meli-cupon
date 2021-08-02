@@ -3,7 +3,6 @@ package com.havendan.challengemelicupon.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.havendan.challengemelicupon.request.RequestCupon;
 
 public class Cupon {
 	
@@ -59,8 +58,8 @@ public class Cupon {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if(obj instanceof RequestCupon) {
-			RequestCupon otherCupon = (RequestCupon) obj;
+		if(obj instanceof Cupon) {
+			Cupon otherCupon = (Cupon) obj;
 			if (this.amount.equals(otherCupon.getAmount()) && this.item_ids.size() == otherCupon.getItem_ids().size()){
 				for (int i = 0; i < this.item_ids.size(); i++) {
 					if (!this.item_ids.get(i).equals(otherCupon.getItem_ids().get(i))) {

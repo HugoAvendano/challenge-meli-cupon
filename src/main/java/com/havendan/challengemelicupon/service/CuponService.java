@@ -1,9 +1,8 @@
 package com.havendan.challengemelicupon.service;
 
-
-
-
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -14,6 +13,12 @@ import com.havendan.challengemelicupon.exception.ServiceException;
 
 @Service
 public class CuponService {
+	
+	/**
+	 *@param  items conjunto de ids de productos con sus respectivos precios
+	 *@param  amount valor maximo
+	 *@return Cupon que contiene un lista de items que maximizan el total
+	 **/
 	
 	public Cupon calculate(HashMap<String, Float> items, Float amount) throws ServiceException {
 		
@@ -32,17 +37,19 @@ public class CuponService {
 		
 		Cupon cupon = new Cupon();
 		Cupon cuponOptimizado = new Cupon();
-		getMaximizacion(cupon,cuponOptimizado, items, false, amount);
+		List<String> listIds= new ArrayList<String>(items.keySet());
+		getMaximizacion(cupon,cuponOptimizado, items, listIds, false, amount);
 		
 		return cuponOptimizado;		
 		
 	}
 
 
-	private void getMaximizacion(Cupon cupon, Cupon cuponOptimizado, HashMap<String, Float> items, boolean carritoLleno,
+	private void getMaximizacion(Cupon cupon, Cupon cuponOptimizado, HashMap<String, Float> items,List<String> listIds, boolean carritoLleno,
 			Float amount) {
 		
 		if (carritoLleno) {
+			
 			if (cuponOptimizado.getAmount() < cupon.getAmount()) {
 				cuponOptimizado.clear();
 				for (String item: cupon.getItem_ids()) {
@@ -51,25 +58,29 @@ public class CuponService {
 				
 			}
 			
-		}else {
-			for(String id: items.keySet()) {
-				if (!cupon.contiene(id)) {
-					if (cupon.getAmount() + items.get(id) <= amount) {
-						cupon.addItem(id,items.get(id));
-						getMaximizacion(cupon, cuponOptimizado, items, false, amount);
-						cupon.removeItem(id,items.get(id));
-						
-					}else {
-						getMaximizacion(cupon, cuponOptimizado, items, true, amount);
-					}
-				}
-				
-				
+			
+		}else if (listIds.size() == 1) {
+			if (cupon.getAmount() + items.get(listIds.get(0)) <= amount){
+					cupon.addItem(listIds.get(0), items.get(listIds.get(0)));
+					getMaximizacion(cupon, cuponOptimizado, items, null, true, amount);
+					cupon.removeItem(listIds.get(0), items.get(listIds.get(0)));
+					getMaximizacion(cupon, cuponOptimizado, items, null, true, amount);
+			}else{
+				getMaximizacion(cupon, cuponOptimizado, items, null, true, amount);
 			}
-			getMaximizacion(cupon, cuponOptimizado, items, true, amount);
+			
+			
+		}else {
+			if (cupon.getAmount() + items.get(listIds.get(0)) <= amount){
+				cupon.addItem(listIds.get(0), items.get(listIds.get(0)));
+				getMaximizacion(cupon, cuponOptimizado, items, listIds.subList(1, listIds.size()), false, amount);
+				cupon.removeItem(listIds.get(0), items.get(listIds.get(0)));
+				getMaximizacion(cupon, cuponOptimizado, items, listIds.subList(1, listIds.size()), false, amount);
+			}else {
+				getMaximizacion(cupon, cuponOptimizado, items, listIds.subList(1, listIds.size()), false, amount);
+			}
 			
 		}
 		
 	}
-
 }

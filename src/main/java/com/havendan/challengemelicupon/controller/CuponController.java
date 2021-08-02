@@ -33,19 +33,12 @@ public class CuponController {
 		
 		try {
 			HashMap<String,Float> items = apiConnection.getInfoItems(productos.getItem_ids());			
-			Cupon cupon = serviceManager.calculate(items, productos.getAmount());
-			
+			Cupon cupon = serviceManager.calculate(items, productos.getAmount());			
 			return   ResponseEntity.status(HttpStatus.OK).body(cupon) ;
-		}catch (ServiceException e) {
-			
-			//e.printStackTrace();
-			
+		}catch (ServiceException e) {			
 			return  ResponseEntity.status(e.getHttpStatus()).body(new ErrorResponse( e.getMessage(),e.getHttpStatus().name(),e.getHttpStatus().value()));
 
-		}
-		
-		
-		
+		}	
 		
 	} 
 

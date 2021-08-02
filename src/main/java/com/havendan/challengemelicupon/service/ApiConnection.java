@@ -16,8 +16,9 @@ public class ApiConnection {
 	private static final String URL = "https://api.mercadolibre.com";
 	 
 	/**
-	 * @param item_ids : List<String>
-	 * @return HashMap<String,Float >*/
+	 * Obtiene los precios  de una lista de items
+	 * @param item_ids : lista de items de la que se va a buscar su informacion
+	 * @return HashMap*/
 	public HashMap<String, Float> getInfoItems(List<String> item_ids) throws ServiceException{	
 		
 		validarItems(new ArrayList<String>(item_ids));
@@ -38,6 +39,9 @@ public class ApiConnection {
 		return items;
 	}
 	
+	/**Valida que no haya elementos repetidos en la lista y que la lista no este vacia.En caso de que haya elementos
+	 *  repetidos o la lista este vacia se lanza una exepcion.
+	 * @param item_ids lista de items a validar*/
 	private void validarItems(List<String> item_ids) throws ServiceException {
 		
 		if (item_ids.size() == 0 ) {
