@@ -19,6 +19,7 @@ El mensaje que procesa es
 
 
 ## INSTALACION
+0. Tener instalado maven
 
 1. Descargar el proyecto 
   
